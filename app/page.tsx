@@ -1,65 +1,69 @@
-import Image from "next/image";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Product } from './types';
 
-export default function Home() {
+// Instructs Next.js to cache this route and revalidate it in the background at most every 60 seconds
+export const revalidate = 60;
+
+// Fetch function executed directly on the server side during rendering execution cycles
+async function getProducts(): Promise<Product[]> {
+  const targetUrl = "https://raw.githubusercontent.com/changhejeong/web-assets-hotlink/main/product-list-v1.json";
+  
+  const res = await fetch(targetUrl, {
+    next: { revalidate: 60 } // Double enforcement of internal route caching lifecycle handles
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to download product entries from remote host: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export default async function HomePage() {
+  const products = await getProducts();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="space-y-8">
+      <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+        Welcome to our E-commerce...
+      </h1>
+
+      {/* Grid container: Displays 3 columns on medium screens and up, with a tight 4px (gap-1) gap */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-1 bg-slate-200 p-1 rounded-lg">
+        {products.map((product) => (
+          <div 
+            key={product.id} 
+            className="bg-white p-4 flex flex-col justify-between hover:shadow-md transition-shadow"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <div>
+              {/* Product Layout Image forced to 100px width and 100px height */}
+              <div className="mb-4 flex justify-start">
+                <div className="w-[100px] h-[100px] relative border border-slate-100 rounded overflow-hidden bg-slate-50">
+                  <Link href={`/products/${product.id}`}><Image src={product.image} alt={product.title} width={100} height={100} className="object-cover w-full h-full"/></Link>
+                </div>
+              </div>
+
+              {/* Dynamic routing action link wrapped cleanly around the catalog item header */}
+              <h2 className="text-lg font-bold text-slate-900 hover:text-blue-600 transition-colors">
+                <Link href={`/products/${product.id}`}>
+                  {product.title}
+                </Link>
+              </h2>
+
+              <p className="text-sm font-medium text-blue-600 mb-1">{product.subtitle}</p>
+              <p className="text-xs text-slate-500 line-clamp-3 mb-4">{product.description}</p>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
+              <span className="text-lg font-black text-slate-900">
+                ${Number(product.price).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
