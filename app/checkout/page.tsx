@@ -41,14 +41,12 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <h1 className="text-3xl font-black tracking-tight text-slate-900">Confirm your order</h1>
-
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         {/* Order Details & Summary column */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
-            <h2 className="text-xl font-bold text-slate-900 mb-4 pb-2 border-b">Review Items</h2>
+            <h2 className="text-xl font-bold text-slate-900 border-b border-dashed border-gray-500 pb-2 mb-2">Your order summary</h2>
             
             {cartItems.length === 0 ? (
               <p className="text-slate-500 py-4">No products are staged in your order list context.</p>
@@ -78,7 +76,7 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            <div className="mt-6 pt-4 border-t border-slate-200 flex justify-between items-center text-lg font-black text-slate-900">
+            <div className="border-t border-dashed border-gray-500 pt-2 mt-2 flex justify-between items-center text-lg font-black text-slate-900">
               <span>Total Price:</span>
               <span>${totalCartPrice.toFixed(2)}</span>
             </div>
@@ -88,7 +86,7 @@ export default function CheckoutPage() {
         {/* Checkout Billing Form info column */}
         <div className="lg:col-span-5">
           <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-            <h2 className="text-xl font-bold text-slate-900 pb-2 border-b">Buyer Details</h2>
+            <h2 className="text-xl font-bold text-slate-900 border-b border-dashed border-gray-500 pb-2">Buyer Details</h2>
             
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Full Name</label>
@@ -134,7 +132,7 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={cartItems.length === 0}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg shadow transition-colors mt-6"
+              className="w-full bg-blue-700 hover:bg-blue-500 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg shadow transition-colors mt-6"
             >
               Confirm check out
             </button>

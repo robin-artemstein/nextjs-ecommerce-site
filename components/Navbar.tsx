@@ -27,7 +27,7 @@ export default function Navbar() {
         <div className="relative">
           <button
             onClick={() => setIsModalOpen(!isModalOpen)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-md transition-all active:scale-95 flex items-center gap-1 shadow-md"
+            className="bg-blue-700 hover:bg-blue-500 text-white font-medium px-5 py-2 rounded-md transition-all active:scale-95 flex items-center gap-1 shadow-md"
           >
             <span>Cart</span>
             <span className="font-bold">({totalItemsCount})</span>
